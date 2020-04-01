@@ -1,7 +1,7 @@
 # CovidTests
 Program to monitor Covid-19 Tests
 
-This is a ** work in progress ** to monitor the number of Covid-19 Tests done by various countries.
+This is a **work in progress** to monitor the number of Covid-19 Tests done by various countries.
 The python code scrapes government official sources for daily updates on the number of covid tests completed.
 
 ## A few quick notes
