@@ -1,15 +1,15 @@
 # CovidTests
-Program to monitor Covid-19 Tests
 ![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/PerMillionBar.png "Tests Per Million")
 ![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/TestsPerCapitaBar.png "Tests Per Capita")
 (See *Explaning the Data* for information on different data types.)
 
-This is a **work in progress** to monitor the number of Covid-19 Tests done by various countries.
-The python code scrapes government official sources for daily updates on the number of covid tests completed.
+This is a **work in progress** to monitor the number of Covid-19 Tests performed by various countries.
+
 
 ## Explaining the Data
 The number of Coronavirus tests performed is an important metric of each country's effort to combat the spread of Coronavirus. However, the data on the number of tests completed is often unclear, inconsistent or entirely non-existent. 
 For example, Spain has so far released no official data on the number of tests it has performed, despite the fact that regions within Spain are [obliged to provide the government with daily reports on the number of tests completed](https://maldita.es/malditodato/2020/03/23/350000-tests-pruebas-diagnostico-coronavirus-gobierno-hecho-realmente-cambios-criterio/).
+
 On the other hand, Germany and France release their data at extremely irregular intervals. France last officially released data for 24th of March, Germany hasn't released data since the 20th.
 
 Countries are often not clear on exactly what they are measuring when they release the number of tests and  whether this data includes all private tests performed in the country as well.
@@ -22,7 +22,7 @@ I have tried to make the data as transparent as possible by including what type 
 Whilst this does make it difficult to compare different country's testing efforts it can still be informative as long as the caveats in the data are understood. 
 
 
-##Sources
+## Sources
 | Country        | Source Name                                                                                | Source                                                                                                                                                                                                 | ReleaseType        |
 |----------------|--------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
 | United Kingdom | UK Government                                                                              | https://www.gov.uk/guidance/coronavirus-covid-19-information-for-the-public#number-of-cases                                                                                                            | Daily              |
@@ -52,10 +52,10 @@ Whilst this does make it difficult to compare different country's testing effort
 | France         | Public Health France                                                                       | https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde | Tempremental       |
 
 
-##Notes
+## Notes
 * Australia does not seem to update their results properly. Their government [website](https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-current-situation-and-case-numbers) displays an out of date totat. All of the following Australian states have up to date trackers:
 	* [New South Wales](https://www.health.nsw.gov.au/news/Pages/20200329_01.aspx)
-	* [Queensland)(https://www.qld.gov.au/health/conditions/health-alerts/coronavirus-covid-19/current-status/current-status-and-contact-tracing-alerts)
+	* [Queensland](https://www.qld.gov.au/health/conditions/health-alerts/coronavirus-covid-19/current-status/current-status-and-contact-tracing-alerts)
 	* [Western Australia](https://ww2.health.wa.gov.au/Articles/A_E/Coronavirus/COVID19-statistics)
 	* [Victoria](https://www.dhhs.vic.gov.au/media-hub-coronavirus-disease-covid-19)
 	* [Southern Australia](https://www.sahealth.sa.gov.au/wps/wcm/connect/Public+Content/SA+Health+Internet/About+us/News+and+media/all+media+releases/)
@@ -76,4 +76,4 @@ Whilst this does make it difficult to compare different country's testing effort
 * Testsviz.r (visualisation in R)
 
 ## Help me out
-I'm on twitter at [@tomandthenews](https://twitter.com/tomandthenews). If you have any questions/suggestions etc. don't hesitate to tweet me or send me a DM. 
+I'm on twitter at [@tomandthenews](https://twitter.com/tomandthenews). If you have any questions/suggestions please let me know! 
