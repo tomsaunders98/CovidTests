@@ -1,6 +1,6 @@
 # CovidTests
 ![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/PerMillionBar.png "Tests Per Million")
-![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/TestsPerCapitaBar.png "Tests Per Capita")
+![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/PerCapitaBar.png "Tests Per Capita")
 (See *Explaning the Data* for information on different data types.)
 
 This is a **work in progress** to monitor the number of Covid-19 Tests performed by various countries.
@@ -10,7 +10,7 @@ This is a **work in progress** to monitor the number of Covid-19 Tests performed
 The number of Coronavirus tests performed is an important metric of each country's effort to combat the spread of Coronavirus. However, the data on the number of tests completed is often unclear, inconsistent or entirely non-existent. 
 For example, Spain has so far released no official data on the number of tests it has performed, despite the fact that regions within Spain are [obliged to provide the government with daily reports on the number of tests completed](https://maldita.es/malditodato/2020/03/23/350000-tests-pruebas-diagnostico-coronavirus-gobierno-hecho-realmente-cambios-criterio/).
 
-On the other hand, Germany and France release their data at extremely irregular intervals. France last officially released data for 24th of March, Germany hasn't released data since the 20th.
+On the other hand, Germany and France release their data at extremely irregular intervals. France last officially released data for 24th of March, Germany hasn't released their data since the 20th of March.
 
 Countries are often not clear on exactly what they are measuring when they release the number of tests and  whether this data includes all private tests performed in the country as well.
 I have tried to make the data as transparent as possible by including what type of measurement has been used where it is known. There are 3 common types of measurements:
@@ -19,7 +19,7 @@ I have tried to make the data as transparent as possible by including what type 
 2. **People**: The number of people tested. Even if someone is tested multiple tests it will still only be counted once.
 3. **Cases**: The number of cases tested. If one person gets Coronavirus and receives multiple tests it will only be counted once. However, if he gets the virus again it will be counted seperately. 
 
-Whilst this does make it difficult to compare different country's testing efforts it can still be informative as long as the caveats in the data are understood. 
+Whilst this does make it difficult to compare different country's testing efforts it is still informative as long as the caveats in the data are understood. 
 
 
 ## Sources
@@ -53,7 +53,7 @@ Whilst this does make it difficult to compare different country's testing effort
 
 
 ## Notes
-* Australia does not seem to update their results properly. Their government [website](https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-current-situation-and-case-numbers) displays an out of date total. All of the following Australian states have up to date trackers:
+* Australia does not seem to update their results regularly. Their government [website](https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-current-situation-and-case-numbers) displays an out of date total. All of the following Australian states have up to date trackers:
 	* [New South Wales](https://www.health.nsw.gov.au/news/Pages/20200329_01.aspx)
 	* [Queensland](https://www.qld.gov.au/health/conditions/health-alerts/coronavirus-covid-19/current-status/current-status-and-contact-tracing-alerts)
 	* [Western Australia](https://ww2.health.wa.gov.au/Articles/A_E/Coronavirus/COVID19-statistics)
@@ -75,5 +75,5 @@ Whilst this does make it difficult to compare different country's testing effort
 * Testnumbers.csv (collated data)
 * Testsviz.r (visualisation in R)
 
-## Help me out
+## Share Your Thoughts
 I'm on twitter at [@tomandthenews](https://twitter.com/tomandthenews). If you have any questions/suggestions please let me know! 
