@@ -48,7 +48,7 @@ plotPC <- ggplot(data = testnumbersBar, aes(x = reorder(CountryNames, TestsPerCa
 plotPC + 
   scale_y_continuous(limits=c(0,0.015)) +
   xlab("Countries ")+
-  ylab("Tests Per Million") +
+  ylab("Tests Per Capita") +
   ggtitle("COVID-19 Tests Completed Per Capita") +
   labs(fill = "Data Collected As:") +
   coord_flip() +
@@ -67,7 +67,7 @@ plotPM <- ggplot(data = testnumbersBar, aes(x = reorder(CountryNames, TestsPerMi
 plotPM + 
   scale_y_continuous(limits=c(0,1.9)) +
   xlab("Countries ")+
-  ylab("Tests Per Capita") +
+  ylab("Tests Per Million") +
   ggtitle("COVID-19 Tests Completed Per Million") +
   labs(fill = "Data Collected As:") +
   coord_flip() +
