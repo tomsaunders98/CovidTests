@@ -1,6 +1,6 @@
 # CovidTests
-![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/PerMillionBar.png "Tests Per Million")
-![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/TestsPerCapitaBar.png "Tests Per Capita")
+![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/PerMillionBar.png "Tests Per Million")
+![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/TestsPerCapitaBar.png "Tests Per Capita")
 (See *Explaning the Data* for information on different data types.)
 
 This is a **work in progress** to monitor the number of Covid-19 Tests performed by various countries.
@@ -53,7 +53,7 @@ Whilst this does make it difficult to compare different country's testing effort
 
 
 ## Notes
-* Australia does not seem to update their results properly. Their government [website](https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-current-situation-and-case-numbers) displays an out of date totat. All of the following Australian states have up to date trackers:
+* Australia does not seem to update their results properly. Their government [website](https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-current-situation-and-case-numbers) displays an out of date total. All of the following Australian states have up to date trackers:
 	* [New South Wales](https://www.health.nsw.gov.au/news/Pages/20200329_01.aspx)
 	* [Queensland](https://www.qld.gov.au/health/conditions/health-alerts/coronavirus-covid-19/current-status/current-status-and-contact-tracing-alerts)
 	* [Western Australia](https://ww2.health.wa.gov.au/Articles/A_E/Coronavirus/COVID19-statistics)

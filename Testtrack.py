@@ -12,9 +12,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 #Formating logging
 logging.basicConfig(filename='Trackoutput.log')
 
-
-
-
+#translate months for danish site
 monthindanish = {
     'marts' : 'march',
     'april' : 'april',
@@ -22,9 +20,11 @@ monthindanish = {
     'juni' : 'june',
     'juli' : 'july'
 }
+# load data, create dictionary
 testdata = pd.read_csv("Testnumbers.csv")
 pages = pd.Series(testdata.Link.values, testdata.Country.values).to_dict()
 
+# parse dates into datetime and numbers into int
 def clearstring(number,date):
     regex = re.compile('[^a-zA-Z0-9 -:.]')
     regex2 = re.compile('[^0-9]')
@@ -35,7 +35,7 @@ def clearstring(number,date):
     date = dateparser.parse(date)
     return int(number), date
 
-
+# instructions for scraping websites
 def TrackChanges(Country):
     if Country == "UK":
         page = urllib.request.urlopen(pages["UK"])
@@ -227,7 +227,7 @@ def TrackChanges(Country):
     testnumber, testdate = clearstring(testnumber, testdate)
     return testnumber,testdate
 
-
+## Data Evaluation and Insertion
 def adddata(country, date, number):
     for i in range(0,4):
         d = datetime.timedelta(days=i)
@@ -250,7 +250,7 @@ def adddata(country, date, number):
         testdata.to_csv("Testnumbers.csv", index=False)
 
 
-
+# Error Handling
 def mainquery():
     print("Enter country code:")
     x = input()
