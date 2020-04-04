@@ -1,8 +1,10 @@
 library(tidyverse)
 testnumbers <- read_csv("Testnumbers.csv")
-testnumbers <- mutate(testnumbers,
-       testsCP = tests2days/Population
-)
+
+#Slice Graph for 
+dates_from_numbers <- slice(testnumbers, 6:n())
+
+
 plot <- ggplot(data = testnumbers) +
   geom_bar(mapping = aes(x = CountryNames, y = testsCP, fill = CountryNames), stat = "identity", show.legend = FALSE
 )

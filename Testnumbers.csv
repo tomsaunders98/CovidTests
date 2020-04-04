@@ -1,23 +1,26 @@
-Country,31/03/2020,30/03/2020,29/03/2020,28/03/2020,01/04/2020,Population,CountryNames,tests2days
-UK,0,134946,0,0,152979,67886011,United Kingdom,152979
-USA,956481,0,0,0,1059209,331002651,United States,1059209
-SK,410564,0,0,0,421547,51269185,South Korea,421547
-CAN,241138,225705,0,0,0,37742154,Canada,241138
-IT,506968,477359,0,0,0,60461826,Italy,506968
-NOR,94265,90242,0,0,0,5421241,Norway,94265
-DEN,23763,0,0,0,26776,5792202,Denmark,26776
-AUST,52344,0,0,0,0,9006398,Austria,52344
-JPN,0,0,0,0,34508,126476461,Japan,34508
-CZH,48811,0,0,0,0,10708981,Czech Republic,48811
-EST,12401,0,0,0,14353,1326535,Estonia,14353
-HUN,12401,0,0,0,15208,9660351,Hungary,15208
-LAT,14807,0,0,0,0,1886198,Latvia,15208
-LIT,11280,0,0,0,12574,2722289,Lithuania,15208
-NED,55228,52119,49030,0,0,17134872,Nedtherlands,55228
-RO,24654,0,0,0,26609,19237691,Romania,26609
-RUS,0,536669,0,0,0,145934462,Russia,536669
-SRB,0,3084,0,0,4371,8737371,Serbia,4371
-SVK,9097,8220,0,0,0,5459642,Slovakia,9097
-SLI,23762,22474,0,0,0,2078938,Slovenia,23762
-SWE,35900,0,0,0,0,10099265,Sweden,35900
-SWI,123150,0,0,0,0,8654622,Switzerland,123150
+Country,Population,CountryNames,Link,DataType,ReleaseType,4/4/2020,3/4/2020,2/4/2020,1/4/2020,31/3/2020,30/3/2020,29/3/2020,28/3/2020,24/3/2020,20/3/2020
+UK,67886011,United Kingdom,https://www.gov.uk/guidance/coronavirus-covid-19-information-for-the-public#number-of-cases,People,Daily,183190.0,173784.0,163194.0,152979.0,,134946.0,,,,
+USA,331002651,United States,https://covidtracking.com/data/,Unclear,Daily (Unofficial),1438455.0,1288013.0,1179589.0,1059209.0,956481.0,,,,,
+SK,51269185,South Korea,https://www.cdc.go.kr/board/board.es?mid=&bid=0030,Cases,Daily,455032.0,443273.0,431743.0,421547.0,410564.0,,,,,
+CAN,37742154,Canada,https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection.html,People,Daily,,290570.0,268154.0,,241138.0,225705.0,,,,
+IT,60461826,Italy,https://github.com/pcm-dpc/COVID-19/tree/master/schede-riepilogative/regioni,Unclear,Daily,657223.0,,581232.0,,506968.0,477359.0,,,,
+NOR,5421241,Norway,https://www.fhi.no/en/id/infectious-diseases/coronavirus/,Unclear,Daily,,105865.0,101986.0,98587.0,94265.0,90242.0,,,,
+DEN,5792202,Denmark,https://www.ssi.dk/aktuelt/sygdomsudbrud/coronavirus,People,Daily,39928.0,34388.0,30448.0,26776.0,23763.0,,,,,
+AUST,9006398,Austria,https://www.sozialministerium.at/Informationen-zum-Coronavirus/Neuartiges-Coronavirus-(2019-nCov).html,Unclear,Daily,,98343.0,92190.0,,52344.0,,,,,
+JPN,126476461,Japan,https://www.mhlw.go.jp/stf/houdou/index.html,People,Daily,,39446.0,34510.0,34508.0,,,,,,
+CZH,10708981,Czech Republic,https://onemocneni-aktualne.mzcr.cz/covid-19,Samples,Daily,74170.0,,60990.0,,48811.0,,,,,
+EST,1326535,Estonia,https://www.terviseamet.ee/en/covid19,Samples,Daily,19091.0,18290.0,15725.0,14353.0,12401.0,,,,,
+HUN,9660351,Hungary,https://koronavirus.gov.hu/,Samples,Daily,19424.0,17769.0,16401.0,15208.0,12401.0,,,,,
+LAT,1886198,Latvia,https://arkartassituacija.gov.lv/,Samples,Daily,,18198.0,15834.0,,14807.0,,,,,
+LIT,2722289,Lithuania,https://sam.lrv.lt/lt/naujienos/koronavirusas,Samples,Daily,21376.0,18432.0,15635.0,12574.0,11280.0,,,,,
+NED,17134872,Nedtherlands,https://www.rivm.nl/coronavirus/covid-19/informatie-voor-professionals/virologische-dagstaten,People,Daily,,,61721.0,58344.0,55228.0,52119.0,49030.0,,,
+RO,19237691,Romania,https://www.mai.gov.ro/category/comunicate-de-presa/,Samples,Daily,36092.0,31657.0,28483.0,26609.0,24654.0,,,,,
+RUS,145934462,Russia,https://rospotrebnadzor.ru/about/info/news/,Unclear,Daily,,,575000.0,536000.0,,536669.0,,,,
+SRB,8737371,Serbia,https://www.zdravlje.gov.rs/sekcija/345852/covid-19.php,Samples,Daily,,5756.0,5008.0,4371.0,,3084.0,,,,
+SVK,5459642,Slovakia,https://mojeezdravie.nczisk.sk/api/v1/ezdravie-stats-proxy-api.php,Samples,Daily,,,11742.0,10252.0,9097.0,8220.0,,,,
+SLI,2078938,Slovenia,https://www.nijz.si/sl/dnevno-spremljanje-okuzb-s-sars-cov-2-covid-19/,Samples,Daily,,,,24857.0,23762.0,22474.0,,,,
+SWE,10099265,Sweden,https://www.folkhalsomyndigheten.se/smittskydd-beredskap/utbrott/aktuella-utbrott/covid-19/aktuellt-epidemiologiskt-lage/,People,Weekly,,,,,35900.0,,,,,
+SWI,8654622,Switzerland,https://www.bag.admin.ch/bag/de/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html,,Weekly,153440.0,,,,123150.0,,,,,
+ICE,341243,Iceland,https://e.infogram.com/e3205e42-19b3-4e3a-a452-84192884450d?parent_url=https%3A%2F%2Fwww.covid.is%2Fdata&src=embed#,,Daily,,,22154.0,,,,,,,
+GER,83783942,Germany,https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Situationsberichte/Gesamt.html,Samples,Tempremental,,,,,,,,,,918460.0
+FRA,65273511,France,https://www.santepubliquefrance.fr/maladies-et-traumatismes/maladies-et-infections-respiratoires/infection-a-coronavirus/articles/infection-au-nouveau-coronavirus-sars-cov-2-covid-19-france-et-monde,Unclear,Tempremental,,,,,,,,,101046.0,
