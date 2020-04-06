@@ -95,7 +95,7 @@ linedata <- testnumbers %>%
 # Develop Line Graph
 
 LinePM <- ggplot(data = linedata, aes(x = dates, y = Total, group = CountryNames, color=CountryNames)) +
-  geom_smooth() +
+  geom_line() +
   geom_point(aes(shape=DataType)) +
   geom_label_repel(aes(label = label),
                  nudge_x=0.01,

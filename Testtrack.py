@@ -1,39 +1,49 @@
-import urllib.request, re, tabula, pytesseract, json, dateparser, datetime, pandas as pd, numpy as np, sys, logging, math
+import urllib.request, re, tabula, pytesseract, json, dateparser, datetime, pandas as pd, numpy as np, sys, logging, \
+    math
+from dateparser.search import search_dates
 from bs4 import BeautifulSoup
+
 try:
     from PIL import Image
 except ImportError:
     import Image
 from PyPDF2 import PdfFileReader
 from googletrans import Translator
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
+# Formating logging
+logging.basicConfig(format='%(asctime)-15s %(name)s - %(levelname)s - %(message)s', filename='Trackoutput.log')
 
-#Formating logging
-logging.basicConfig(filename='Trackoutput.log')
-
-#translate months for danish site
+# translate months for danish site
 monthindanish = {
-    'marts' : 'march',
-    'april' : 'april',
-    'maj' : 'may',
-    'juni' : 'june',
-    'juli' : 'july'
+    'marts': 'march',
+    'april': 'april',
+    'maj': 'may',
+    'juni': 'june',
+    'juli': 'july'
 }
 # load data, create dictionary
 testdata = pd.read_csv("Testnumbers.csv")
 pages = pd.Series(testdata.Link.values, testdata.Country.values).to_dict()
 
+
 # parse dates into datetime and numbers into int
-def clearstring(number,date):
+def clearstring(number, date):
     regex = re.compile('[^a-zA-Z0-9 -:.]')
     regex2 = re.compile('[^0-9]')
     number = str(number)
-    date = str(date)
+    if not isinstance(date, datetime.datetime):
+        date = str(date)
+        date = regex.sub('', date)
+        date = dateparser.parse(date)
     number = regex2.sub('', number)
-    date = regex.sub('', date)
-    date = dateparser.parse(date)
+
     return int(number), date
+
 
 # instructions for scraping websites
 def TrackChanges(Country):
@@ -41,8 +51,8 @@ def TrackChanges(Country):
         page = urllib.request.urlopen(pages["UK"])
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find(id="number-of-cases-and-deaths").next_element.next_element.next_element.string
-        testnumber = re.findall('[0-9,]+', text)[3]
-        testdate = ' '.join(text.split(" ")[4:6])
+        testnumber = re.findall('(\d+([\d,]?\d)*(\.\d+)?)', text)[2][0]
+        testdate = re.findall('((\d+) April)', text)[0][0]  # a hack but will work for now
     if Country == "USA":
         page = urllib.request.urlopen(pages["USA"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -56,12 +66,13 @@ def TrackChanges(Country):
         soup = BeautifulSoup(page, 'html.parser')
         testdate = soup.find("li").find("b").string
         testnumber = soup.find("tbody").findAll("tr")[3].findAll("td")[1].find("p").string
-    if Country == "CAN" :
+    if Country == "CAN":
         page = urllib.request.urlopen(pages["CAN"])
         soup = BeautifulSoup(page, 'html.parser')
-        testdate = soup.find("table", class_="table table-bordered table-condensed").find("caption").string
-        testdate = ' '.join(testdate.split()[11:14])
-        testnumber = soup.find("td").string
+        text = soup.find("table", class_="table table-bordered table-condensed")
+        testdate = search_dates(text.find("caption").string)[0][1]
+        testnumber = text.find("td").string
+        print(testnumber)
     if Country == "IT":
         page = urllib.request.urlopen(pages["IT"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -70,7 +81,8 @@ def TrackChanges(Country):
         text = "https://github.com" + text1[1].find("a")['href']
         downloadtext = text.replace("blob", "raw")
         tables = tabula.read_pdf(downloadtext)
-        testnumber = tables[0].iloc[23, 8]
+        df = tables[0]
+        testnumber = df.iloc[-1,-1]
         if len(str(testnumber)) > 8:
             testnumber = ''.join(list(str(testnumber))[:7])
     if Country == "NOR":
@@ -89,15 +101,17 @@ def TrackChanges(Country):
     if Country == "AUST":
         page = urllib.request.urlopen(pages["AUST"])
         soup = BeautifulSoup(page, 'html.parser')
-        testnumber = ''.join(soup.findAll("p")[3].get_text().split()[-1])
-        testdate = soup.find("span", class_="supertitle").get_text()
+        text = soup.find("main").findAll("p")[2].get_text()
+        testnumber = re.findall('(\d+([\d.]?\d)*(\.\d+)?)', text)[2][0]
+        testdate = soup.find("time").string
     if Country == "JPN":
         page = urllib.request.urlopen(pages["JPN"])
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find("ul", class_="m-listLinkMonth").findAll("li")[-1].find("a")['href']
         page = urllib.request.urlopen(text)
         soup = BeautifulSoup(page, 'html.parser')
-        text = soup.findAll("ul", class_="m-listNews")#[1].find("span", string=re.compile("日版")).parent.parent['href']
+        text = soup.findAll("ul",
+                            class_="m-listNews")  # [1].find("span", string=re.compile("日版")).parent.parent['href']
         done = False
         for link in text:
             if not done:
@@ -106,7 +120,9 @@ def TrackChanges(Country):
                 except:
                     continue
                 done = True
+        print("https://www.mhlw.go.jp/" + text)
         page = urllib.request.urlopen("https://www.mhlw.go.jp/" + text)
+
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find("div", class_="m-grid__col1").find("img")['src']
         urllib.request.urlretrieve(text, 'image.jpg')
@@ -121,11 +137,12 @@ def TrackChanges(Country):
         testnumber = soup.find(id="count-test").string
         text = soup.find(id="last-modified-tests").string.split(" ")
         testdate = ''.join(text[0:3])
-        testdate = re.sub('[^0-9 .]','',testdate).strip()
+        testdate = re.sub('[^0-9 .]', '', testdate).strip()
     if Country == "EST":
         page = urllib.request.urlopen(pages["EST"])
         soup = BeautifulSoup(page, 'html.parser')
-        testnumber = ''.join(soup.find("div", class_="static static-infobox02").find("ul").findAll("li")[1].find("strong").string.split()[2:4])
+        testnumber = soup.find("div", class_="static static-simple-2columns clearfix").find("div",
+                                                                                            class_="col last").get_text()
         testdate = soup.find("div", class_="field-item even").findAll("p")[-1].get_text()
         testdate = testdate.replace("Last updated", "")
     if Country == "HUN":
@@ -133,13 +150,14 @@ def TrackChanges(Country):
         soup = BeautifulSoup(page, 'html.parser')
         testnumber = soup.findAll("span", class_="number")[3].string
         testdate = soup.findAll("div", class_="well-lg text-center")[1].find("p").string
-        testdate = ''.join(re.sub('[^0-9 -.]','',testdate ).strip().split()[0])
+        testdate = ''.join(re.sub('[^0-9 -.]', '', testdate).strip().split()[0])
     if Country == "LAT":
         page = urllib.request.urlopen(pages["LAT"])
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find("div", class_="_1mf _1mj").find("p").get_text()
         testnumber = re.findall('[0-9]+', text)[3]
-        testdate = soup.find("div", class_="article text").get_text().split(" ")[2]
+        text = soup.find("div", class_="formatedtext text").find("p").get_text()
+        testdate = re.findall('\d+\.\d+\.\d+', text)[0]
     if Country == "LIT":
         page = urllib.request.urlopen(pages["LIT"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -178,22 +196,22 @@ def TrackChanges(Country):
         testdate = ''.join(text[0:3])
         testnumber = ''.join(text[3:5])
     if Country == "SRB":
-        page = urllib.request.urlopen(pages["SRB"])
-        soup = BeautifulSoup(page, 'html.parser')
-        url = soup.find("h1", class_="press-title").find("a")['href']
-        page = urllib.request.urlopen("https://www.zdravlje.gov.rs/" + url)
-        soup = BeautifulSoup(page, 'html.parser')
-        text = soup.find("div", class_="article-date").string
-        translator = Translator()
-        testdate = translator.translate(text).text
-        text = soup.findAll("div", class_="printable")[-1].findAll("p")[-1].string
-        testnumber = re.findall('[0-9]+', text)[-1]
+        driver = webdriver.Chrome()
+        driver.get(pages["SRB"])
+        driver.implicitly_wait(100)
+        html = str(driver.find_elements_by_tag_name("html")[0].get_attribute('innerHTML'))
+        soup = BeautifulSoup(html, 'html.parser')
+        text = soup.find("div", class_="elementor-element elementor-element-66d47486 elementor-hidden-tablet elementor-hidden-phone elementor-widget elementor-widget-heading").find("h2").get_text()
+        testdate = re.findall('\d+\.\d+\.\d+', text)[0]
+        testdate = datetime.datetime.strptime(testdate, '%d.%m.%Y')
+        text = soup.find("div", class_="elementor-text-editor elementor-clearfix").get_text()
+        testnumber = re.findall('\d+\.\d+', text)[-1]
     if Country == "SVK":
         page = urllib.request.urlopen(pages["SVK"])
         soup = BeautifulSoup(page, 'html.parser')
         text = json.loads(str(soup))
-        testnumber = int(text["tiles"]["k26"]["data"]["d"][-1]["v"]) + int(text["tiles"]["k25"]["data"]["d"][-1]["v"])
-        testdate = list(text["tiles"]["k26"]["data"]["d"][-1]["d"])[-3:]
+        testnumber = int(text["tiles"]["k5"]["data"]["d"][-1]["v"]) + int(text["tiles"]["k6"]["data"]["d"][-1]["v"])
+        testdate = list(text["tiles"]["k5"]["data"]["d"][-1]["d"])[-3:]
         testdate.insert(1, '/')
         testdate = ''.join(testdate)
     if Country == "SLI":
@@ -219,20 +237,78 @@ def TrackChanges(Country):
             if words[i] == "Stand" and not done:
                 testdate = ''.join(words[i + 1:i + 4])
                 done = True
-    try:
+    if Country == "AUS":
+        page = urllib.request.urlopen(pages["AUS"])
+        soup = BeautifulSoup(page, 'html.parser')
+        text = soup.find("div", class_="bean-block-content").findAll("p")
+        testdate = search_dates(text[0].get_text())[0][1]
+        testnumber = ''.join(re.findall('[0-9]+', text[1].string)[-2:])
+    if Country == "BEL":
+        page = urllib.request.urlopen(pages["BEL"])
+        soup = BeautifulSoup(page, 'html.parser')
+        text = json.loads(str(soup))
+        testdate = text["SASTableData+COVID19BE_TESTS"][-1]["DATE"]
+        text = pd.DataFrame.from_dict(text["SASTableData+COVID19BE_TESTS"])
+        testnumber = text["TESTS"].sum()
+    if Country == "CRO":
+        page = urllib.request.urlopen(pages["CRO"])
+        soup = BeautifulSoup(page, 'html.parser')
+        testdate = search_dates(soup.find("li", class_="time_info").string)[0][1]
+        text = soup.find("div", class_="page_content").get_text()
+        testnumber = re.findall('((\d+) testiranja)', text)[0][1]
+    if Country == "FIN":  # needtoget selenium for this (javascript blocker)
+        driver = webdriver.Chrome()
+        driver.get(pages["FIN"])
+        driver.implicitly_wait(100)
+        html = str(driver.find_elements_by_class_name("journal-content-article")[0].get_attribute('innerHTML'))
+        testnumber = re.findall('(\d+([\d,]?\d)*(\.\d+)?)', html)[3][0]
+        testdate = re.findall(('<strong>(.*?)</strong>'), html)[0]
+        text = testdate.replace('&nbsp;', ' ')
+        testdate = search_dates(text)[0][1]
+    if Country == "IND":  # certificate verify failed: unable to get local issuer certificate (_ssl.c:1108)
+        driver = webdriver.Chrome()
+        driver.get(pages["IND"])
+        driver.implicitly_wait(100)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        testdate = search_dates(soup.find("a", string=re.compile("Testing: Status Update")).get_text())[0][1]
+        url = soup.find("a", string=re.compile("Testing: Status Update"))['href']
+        urllib.request.urlretrieve(url, 'doc.pdf')
+        pdf = PdfFileReader('doc.pdf')
+        page = pdf.getPage(0)
+        words = page.extractText()
+        testnumber = re.findall('((\d+([\d,]?\d)*(\.\d+)?)\s+samples)', words)[0][1]
+    if Country == "NZ":
+        page = urllib.request.urlopen(pages["NZ"])
+        soup = BeautifulSoup(page, 'html.parser')
+        testtable = pd.read_html(str(soup.find("th", string="Lab Testing").parent.parent.parent))[0]
+        testnumber = testtable.loc[testtable["Lab Testing"] == "Total tested to date", ["Tests"]].values[0]
+        testdate = testtable.loc[testtable["Lab Testing"] == "Total tested yesterday", ["Date"]].values[0]
+    if Country == "VET":  # might also need selenium
+        driver = webdriver.Chrome()
+        driver.get(pages["VET"])
+        driver.implicitly_wait(100)
+        html = str(driver.find_elements_by_tag_name("html")[0].get_attribute('innerHTML'))
+        soup = BeautifulSoup(html, 'html.parser')
+        testdate = soup.find("small", class_="text-muted1").find("strong").get_text()
+        testdate = datetime.datetime.strptime(testdate, '%H:%M %d/%m/%Y')
+        testnumber = soup.findAll("span", string=re.compile("Tổng số mẫu đã xét nghiệm cộng dồn:"))[
+            0].next_element.next_element.next_element.get_text()
+
         testnumber
         testdate
-    except NameError:
-        return 0
+
     testnumber, testdate = clearstring(testnumber, testdate)
-    return testnumber,testdate
+    return testnumber, testdate
+
 
 ## Data Evaluation and Insertion
 def adddata(country, date, number):
-    for i in range(0,4):
+    done = False
+    for i in range(0, 4):
         d = datetime.timedelta(days=i)
         dt = datetime.datetime.today()
         dt = dt - d
+
         datestring = f'{dt.day}/{dt.month}/{dt.year}'
         testdatestring = f'{date.day}/{date.month}/{date.year}'
         if datestring not in testdata.columns:
@@ -241,12 +317,18 @@ def adddata(country, date, number):
         lastvalue = testdata.loc[testdata["Country"] == country]
         lastvalue = lastvalue.iloc[:, 6:-1].max(axis=1, numeric_only=True).values[0]
         if number < lastvalue:
-            raise Exception(f"Tests cannot decrease for {country}, largest value is {lastvalue} and attempting to add {number}")
+            raise Exception(
+                f"Tests cannot decrease for {country}, largest value is {lastvalue} and attempting to add {number}")
         if datestring == testdatestring and empty:
             testdata.loc[testdata["Country"] == country, [datestring]] = number
             msg = f'Updated {country} at {testdatestring} with {number}'
             print(msg)
             logging.info(msg)
+            done = True
+        if datestring == testdatestring and not empty:
+            print(f'Attempted to add {number} at {testdatestring} for {country} but cell not empty')
+        if i == 3 and not done:
+            raise Exception(f'Did not include {country} with value {number} on {testdatestring}. Reason unkwon')
         testdata.to_csv("Testnumbers.csv", index=False)
 
 
@@ -283,11 +365,10 @@ def mainquery():
             badcountry.append([country, msg, e])
             logging.error('Error at %s', 'division', exc_info=e)
             continue
-        if changes == 0:
-            msg  = f"No instructions for {country}"
-            e = "None"
+        except NameError as e:
+            msg = f"No instructions for {country}"
             badcountry.append([country, msg, e])
-            logging.info(msg)
+            logging.error('Error at %s', 'division', exc_info=e)
             continue
         else:
             try:
@@ -310,16 +391,7 @@ def mainquery():
         print("No Errors")
         print("-------------------------------")
 
+
 if __name__ == '__main__':
     mainquery()
     print("Completed.")
-
-
-
-
-
-
-
-
-
-
