@@ -63,6 +63,7 @@ def TrackChanges(Country):
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find("span", string=re.compile("updates")).parent['href']
         page = urllib.request.urlopen("https://www.cdc.go.kr" + text)
+        pages["SK"] = "https://www.cdc.go.kr" + text
         soup = BeautifulSoup(page, 'html.parser')
         testdate = soup.find("li").find("b").string
         testnumber = soup.find("tbody").findAll("tr")[3].findAll("td")[1].find("p").string
@@ -72,7 +73,6 @@ def TrackChanges(Country):
         text = soup.find("table", class_="table table-bordered table-condensed")
         testdate = search_dates(text.find("caption").string)[0][1]
         testnumber = text.find("td").string
-        print(testnumber)
     if Country == "IT":
         page = urllib.request.urlopen(pages["IT"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -80,6 +80,7 @@ def TrackChanges(Country):
         testdate = text1[2].find("a").string
         text = "https://github.com" + text1[1].find("a")['href']
         downloadtext = text.replace("blob", "raw")
+        pages["IT"] = downloadtext
         tables = tabula.read_pdf(downloadtext)
         df = tables[0]
         testnumber = df.iloc[-1,-1]
@@ -120,7 +121,8 @@ def TrackChanges(Country):
                 except:
                     continue
                 done = True
-        print("https://www.mhlw.go.jp/" + text)
+
+        pages["JPN"] = "https://www.mhlw.go.jp/" + text
         page = urllib.request.urlopen("https://www.mhlw.go.jp/" + text)
 
         soup = BeautifulSoup(page, 'html.parser')
@@ -180,6 +182,7 @@ def TrackChanges(Country):
         page = urllib.request.urlopen(pages["RO"])
         soup = BeautifulSoup(page, 'html.parser')
         url = soup.find("a", string=re.compile("Informare COVID"))['href']
+        pages["RO"] = url
         page = urllib.request.urlopen(url)
         soup = BeautifulSoup(page, 'html.parser')
         testdate = soup.find("span", class_="posted-on").find("time")['datetime']
@@ -190,6 +193,7 @@ def TrackChanges(Country):
         soup = BeautifulSoup(page, 'html.parser')
         url = soup.find("a", string=re.compile("Информационный"))['href']
         page = urllib.request.urlopen("https://rospotrebnadzor.ru" + url)
+        pages["RUS"] = "https://rospotrebnadzor.ru" + url
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find("p", string=re.compile("лабораторных")).string
         text = re.findall('[0-9]+', text)
@@ -226,6 +230,7 @@ def TrackChanges(Country):
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find("a", class_="icon icon--before icon--pdf")['href']
         downloadtext = "https://www.bag.admin.ch" + text
+        pages["SWI"] = downloadtext
         urllib.request.urlretrieve(downloadtext, 'doc.pdf')
         pdf = PdfFileReader('doc.pdf')
         page = pdf.getPage(0)
@@ -272,11 +277,13 @@ def TrackChanges(Country):
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         testdate = search_dates(soup.find("a", string=re.compile("Testing: Status Update")).get_text())[0][1]
         url = soup.find("a", string=re.compile("Testing: Status Update"))['href']
+        pages["IND"] = url
         urllib.request.urlretrieve(url, 'doc.pdf')
         pdf = PdfFileReader('doc.pdf')
         page = pdf.getPage(0)
         words = page.extractText()
-        testnumber = re.findall('((\d+([\d,]?\d)*(\.\d+)?)\s+samples)', words)[0][1]
+        words = re.findall('(?<=of)(((\d+)|(,)|(\s+))+)(?=samples)', words)[0][0]
+        testnumber = re.sub('\s+', "", words)
     if Country == "NZ":
         page = urllib.request.urlopen(pages["NZ"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -326,9 +333,9 @@ def adddata(country, date, number):
             logging.info(msg)
             done = True
         if datestring == testdatestring and not empty:
-            print(f'Attempted to add {number} at {testdatestring} for {country} but cell not empty')
+            raise Exception(f'Attempted to add {number} at {testdatestring} for {country} but cell not empty')
         if i == 3 and not done:
-            raise Exception(f'Did not include {country} with value {number} on {testdatestring}. Reason unkwon')
+            raise Exception(f'Did not include {country} with value {number} on {testdatestring}. Reason Unknown')
         testdata.to_csv("Testnumbers.csv", index=False)
 
 
@@ -345,31 +352,28 @@ def mainquery():
     for country in countries:
         try:
             changes = TrackChanges(country)
-        except AttributeError as e:
-            msg = f"Code for {country} changed:"
-            badcountry.append([country, msg, e])
+        except AttributeError as e: #code changed
+            badcountry.append([country, e])
             logging.error('Error at %s', 'division', exc_info=e)
             continue
-        except urllib.error.URLError as e:
-            msg = f"Potentially blocked from {country}'s website:"
-            badcountry.append([country, msg, e.reason])
+        except urllib.error.URLError as e: #blocked
+            badcountry.append([country,  e])
             logging.error('Error at %s', 'division', exc_info=e)
             continue
-        except ValueError as e:
-            msg = f"Code for {country} changed: (testnumber not number)"
-            badcountry.append([country, msg, e])
-            logging.error('Error at %s', 'division', exc_info=e)
-            continue
-        except Exception as e:
-            msg = f"Couldn't find numbers for {country}, unclear why"
-            badcountry.append([country, msg, e])
+        except ValueError as e: #code changed
+            badcountry.append([country, e])
             logging.error('Error at %s', 'division', exc_info=e)
             continue
         except NameError as e:
             msg = f"No instructions for {country}"
-            badcountry.append([country, msg, e])
+            badcountry.append([country, msg])
             logging.error('Error at %s', 'division', exc_info=e)
             continue
+        except Exception as e:
+            badcountry.append([country, e])
+            logging.error('Error at %s', 'division', exc_info=e)
+            continue
+
         else:
             try:
                 adddata(country, changes[1], changes[0])
@@ -384,7 +388,7 @@ def mainquery():
         print("-------------------------------")
         for country in badcountry:
             print(country[0])
-            print(country[1])
+            print(pages[country[0]])
             print(f"Error message:  {country[2]}")
             print("-------------------------------")
     else:
