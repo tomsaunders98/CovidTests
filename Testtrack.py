@@ -378,8 +378,7 @@ def mainquery():
             try:
                 adddata(country, changes[1], changes[0])
             except Exception as e:
-                msg = f'Error adding to database for {country} with value {changes[0]} at {changes[1]}:'
-                badcountry.append([country, msg, e])
+                badcountry.append([country,  e])
                 logging.error('Error at %s', 'division', exc_info=e)
                 continue
     print("-------------------------------")
@@ -389,7 +388,7 @@ def mainquery():
         for country in badcountry:
             print(country[0])
             print(pages[country[0]])
-            print(f"Error message:  {country[2]}")
+            print(f"Error message:  {country[1]}")
             print("-------------------------------")
     else:
         print("No Errors")
