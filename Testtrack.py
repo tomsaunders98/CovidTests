@@ -56,8 +56,8 @@ def TrackChanges(Country):
     if Country == "USA":
         page = urllib.request.urlopen(pages["USA"])
         soup = BeautifulSoup(page, 'html.parser')
-        testnumber = soup.find("table").findAll("td")[-1].string
-        testdate = soup.find(class_="info-content").string
+        testnumber = soup.find("table").find("tbody").findAll("td")[-1].string
+        testdate = soup.find("div", class_="infobox-module--content--1toLT").string
     if Country == "SK":
         page = urllib.request.urlopen(pages["SK"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -84,8 +84,9 @@ def TrackChanges(Country):
         tables = tabula.read_pdf(downloadtext)
         df = tables[0]
         testnumber = df.iloc[-1,-1]
-        if len(str(testnumber)) > 8:
-            testnumber = ''.join(list(str(testnumber))[:7])
+        print(testnumber)
+        if len(str(testnumber)) > 10:
+            raise Exception(f"{Country} value of {testnumber} probably too large.")
     if Country == "NOR":
         hdr = {'User-Agent': 'Mozilla/5.0'}
         req = urllib.request.Request(pages["NOR"], headers=hdr)
@@ -102,8 +103,9 @@ def TrackChanges(Country):
     if Country == "AUST":
         page = urllib.request.urlopen(pages["AUST"])
         soup = BeautifulSoup(page, 'html.parser')
-        text = soup.find("main").findAll("p")[2].get_text()
-        testnumber = re.findall('(\d+([\d.]?\d)*(\.\d+)?)', text)[2][0]
+        text = soup.find("main").findAll("p")[2].find("strong").next_element.next_element.string
+        print(text)
+        testnumber = text
         testdate = soup.find("time").string
     if Country == "JPN":
         page = urllib.request.urlopen(pages["JPN"])
@@ -156,7 +158,8 @@ def TrackChanges(Country):
     if Country == "LAT":
         page = urllib.request.urlopen(pages["LAT"])
         soup = BeautifulSoup(page, 'html.parser')
-        text = soup.find("div", class_="_1mf _1mj").find("p").get_text()
+        text = soup.find("div", class_="formatedtext text").findAll("p")[3].get_text()
+        print(text)
         testnumber = re.findall('[0-9]+', text)[3]
         text = soup.find("div", class_="formatedtext text").find("p").get_text()
         testdate = re.findall('\d+\.\d+\.\d+', text)[0]
@@ -171,13 +174,10 @@ def TrackChanges(Country):
         req = urllib.request.Request(pages["NED"], headers=hdr)
         page = urllib.request.urlopen(req)
         soup = BeautifulSoup(page, 'html.parser')
-        text = soup.find("table").findAll("td")[7:-1]
-        testnum = 0
-        for i in range(0, len(text)):
-            if i % 5 == 0:
-                testnum = int(text[i].get_text()) + testnum
-        testnumber = testnum
-        testdate = soup.find("table").findAll("tr")[-1].find("td").get_text()
+        text = soup.find("table", id="Corona_tabel").find("tbody").find("tr")
+        testdate = text.findAll("td")[2].string
+        text1 = text.findAll("td")[1].string
+        testnumber = re.findall('\d+\.\d+', text1)[0]
     if Country == "RO":
         page = urllib.request.urlopen(pages["RO"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -252,8 +252,8 @@ def TrackChanges(Country):
         page = urllib.request.urlopen(pages["BEL"])
         soup = BeautifulSoup(page, 'html.parser')
         text = json.loads(str(soup))
-        testdate = text["SASTableData+COVID19BE_TESTS"][-1]["DATE"]
-        text = pd.DataFrame.from_dict(text["SASTableData+COVID19BE_TESTS"])
+        testdate = text[-1]["DATE"]
+        text = pd.DataFrame.from_dict(text)
         testnumber = text["TESTS"].sum()
     if Country == "CRO":
         page = urllib.request.urlopen(pages["CRO"])
@@ -300,9 +300,6 @@ def TrackChanges(Country):
         testdate = datetime.datetime.strptime(testdate, '%H:%M %d/%m/%Y')
         testnumber = soup.findAll("span", string=re.compile("Tổng số mẫu đã xét nghiệm cộng dồn:"))[
             0].next_element.next_element.next_element.get_text()
-
-        testnumber
-        testdate
 
     testnumber, testdate = clearstring(testnumber, testdate)
     return testnumber, testdate
