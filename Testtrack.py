@@ -103,7 +103,7 @@ def TrackChanges(Country):
     if Country == "AUST":
         page = urllib.request.urlopen(pages["AUST"])
         soup = BeautifulSoup(page, 'html.parser')
-        text = soup.find("main").findAll("p")[2].find("strong").next_element.next_element.string
+        text = soup.find("div", class_="table-responsive").find("table").find("tbody").findAll("tr")[-1].findAll("td")[-1].string
         print(text)
         testnumber = text
         testdate = soup.find("time").string
@@ -205,10 +205,12 @@ def TrackChanges(Country):
         driver.implicitly_wait(100)
         html = str(driver.find_elements_by_tag_name("html")[0].get_attribute('innerHTML'))
         soup = BeautifulSoup(html, 'html.parser')
-        text = soup.find("div", class_="elementor-element elementor-element-66d47486 elementor-hidden-tablet elementor-hidden-phone elementor-widget elementor-widget-heading").find("h2").get_text()
+        text = soup.find("div", attrs={"data-id":"5eb267c9"}).get_text()
         testdate = re.findall('\d+\.\d+\.\d+', text)[0]
+        print(testdate)
         testdate = datetime.datetime.strptime(testdate, '%d.%m.%Y')
-        text = soup.find("div", class_="elementor-text-editor elementor-clearfix").get_text()
+        text = soup.find("div", attrs={"data-id":"6bfc932d"}).get_text()
+        print(text)
         testnumber = re.findall('\d+\.\d+', text)[-1]
     if Country == "SVK":
         page = urllib.request.urlopen(pages["SVK"])
@@ -260,7 +262,8 @@ def TrackChanges(Country):
         soup = BeautifulSoup(page, 'html.parser')
         testdate = search_dates(soup.find("li", class_="time_info").string)[0][1]
         text = soup.find("div", class_="page_content").get_text()
-        testnumber = re.findall('((\d+) testiranja)', text)[0][1]
+        testnumber = re.findall('(\d+\.\d+ )(?=testiranja)', text)[0]
+        print(testnumber)
     if Country == "FIN":  # needtoget selenium for this (javascript blocker)
         driver = webdriver.Chrome()
         driver.get(pages["FIN"])
