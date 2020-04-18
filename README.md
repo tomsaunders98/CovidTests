@@ -3,6 +3,7 @@
 ![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/PerCapitaBar.png "Tests Per Capita")
 ![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/PerMillionLine.png "Tests Per Million")
 (See *Explaning the Data* for information on different data types.)
+(*Graphs updated weekly)
 
 This is a **work in progress** to monitor the number of Covid-19 Tests performed by various countries.
 
