@@ -121,7 +121,19 @@ LinePM +
   scale_color_ipsum() +
   theme_ipsum_rc(grid="XY", axis="xy")
 
+df0 <- testnumbers[7:(ncol(testnumbers)-11)]
+testnumbers1 <- cbind(testnumbers[1], df0[-length(df0)] - df0[-1])
+countries <- list( "UK")
+linedata <- testnumbers1 %>%
+  filter(Country %in% countries) %>%
+  pivot_longer(2:ncol(testnumbers1), names_to="dates", values_to="Total") %>%
+  drop_na(Total) %>%
+  mutate(dates = as.Date(dates, "%d/%m/%Y")) %>%
+  arrange(desc(dates))
 
+
+mindates <-  min(testnumbers1$dates)
+maxdate <- max(testnumbers1$dates)
 
 #geom_smooth( method='lm') +
 

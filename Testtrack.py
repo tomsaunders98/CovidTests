@@ -316,9 +316,10 @@ def adddata(country, date, number):
         dt = datetime.datetime.today()
         dt = dt - d
 
-        datestring = f'{dt.day}/{dt.month}/{dt.year}'
-        testdatestring = f'{date.day}/{date.month}/{date.year}'
+        datestring = f'{dt:%d}/{dt:%m}/{dt.year}'
+        testdatestring = f'{date:%d}/{date:%m}/{date.year}'
         if datestring not in testdata.columns:
+
             testdata.insert(6, datestring, np.nan)
         empty = math.isnan(testdata.loc[testdata["Country"] == country, [datestring]].values[0])
         lastvalue = testdata.loc[testdata["Country"] == country]
