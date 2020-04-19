@@ -35,7 +35,7 @@ testnumbersBar <- testnumbers %>%
   #filter(Country %in% countries) %>%
   mutate(
     TestsPerCap = as.double(max)/as.double(Population),
-    TestsPerMil = as.double(max)/1000000
+    TestsPerMil = (as.double(max)/as.double(Population))*1000
   ) %>%
   arrange(desc(max)) %>%
   head(n=num)
@@ -62,17 +62,17 @@ plotPC +
 
 
 ## Tests Per Million (Bar)
-
+maxnum = max(testnumbersBar$TestsPerMil, na.rm=TRUE) + 7
 
 plotPM <- ggplot(data = testnumbersBar, aes(x = reorder(CountryNames, TestsPerMil), y = TestsPerMil, fill = DataType)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label=datemax, colour = DataType),  vjust=0.5, hjust=0, show.legend = FALSE)
 
 plotPM + 
-  scale_y_continuous(limits=c(0,4.5)) +
+  scale_y_continuous(limits=c(0,maxnum)) +
   xlab("Countries ")+
-  ylab("Tests Per Million") +
-  ggtitle("COVID-19 Tests Completed Per Million") +
+  ylab("Tests Per Thousand") +
+  ggtitle("COVID-19 Tests Completed Per Thousand") +
   labs(fill = "Data Collected As:") +
   coord_flip() +
   scale_color_ipsum() +
@@ -85,8 +85,8 @@ num = 10
 testnumbers$max <- NULL
 
 #develop line columns
-testnumbers[7:(ncol(testnumbers)-1)] <- testnumbers[7:(ncol(testnumbers)-1)]/1000000#testnumbers$Population
-
+testnumbers[7:(ncol(testnumbers)-1)] <- testnumbers[7:(ncol(testnumbers)-1)]/testnumbers$Population
+testnumbers[7:(ncol(testnumbers)-1)] <- testnumbers[7:(ncol(testnumbers)-1)]*1000
 
 linedata <- testnumbers %>%
   arrange(desc(Population)) %>%
@@ -115,7 +115,7 @@ LinePM +
   #scale_y_continuous(limits=c(0,1.2)) +
   xlab("Dates")+
   ylab("Tests Per Million") +
-  ggtitle("COVID-19 Tests Completed Per Million") +
+  ggtitle("COVID-19 Tests Completed Per Thousand") +
   labs(shape = "Data Collected As:") +
   guides(color=FALSE) +
   scale_color_ipsum() +

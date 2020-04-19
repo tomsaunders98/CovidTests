@@ -1,6 +1,5 @@
 # CovidTests
 ![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/PerMillionBar.png "Tests Per Million")
-![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/PerCapitaBar.png "Tests Per Capita")
 ![Tests Per Million](https://github.com/tomsaunders98/CovidTests/raw/master/img/PerMillionLine.png "Tests Per Million")
 (See *Explaning the Data* for information on different data types.)
 (*Graphs updated weekly)
