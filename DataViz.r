@@ -104,11 +104,12 @@ linedata <- testnumbers %>%
 LinePM <- ggplot(data = linedata, aes(x = dates, y = Total, group = CountryNames,color=CountryNames)) +
   geom_point(aes(shape=DataType)) +
   geom_line() +
-  geom_label_repel(aes(label = label),
-                 nudge_x=1,
-                 na.rm = TRUE,
-                 nudge_y=0.01,
-                 min.segment.length = Inf)
+  geom_text(filter(dates == last(dates)), aes(label = CountryNames,x=dates, y = Total, color=CountryNames))
+  # geom_label_repel(aes(label = label),
+  #                nudge_x=1,
+  #                na.rm = TRUE,
+  #                nudge_y=0.01,
+  #                min.segment.length = Inf)
 
 
 LinePM + 
@@ -117,9 +118,9 @@ LinePM +
   ylab("Tests Per Million") +
   ggtitle("COVID-19 Tests Completed Per Thousand") +
   labs(shape = "Data Collected As:") +
-  guides(color=FALSE) +
-  scale_color_ipsum() +
-  theme_ipsum_rc(grid="XY", axis="xy")
+  guides(color=FALSE)
+  # scale_color_ipsum() +
+  # theme_ipsum_rc(grid="XY", axis="xy")
 
 df0 <- testnumbers[7:(ncol(testnumbers)-11)]
 testnumbers1 <- cbind(testnumbers[1], df0[-length(df0)] - df0[-1])
