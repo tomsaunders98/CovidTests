@@ -6,5 +6,5 @@ chromedriver.exe
 doc.pdf
 image.jpg
 Trackoutput.log
-.gitignore
 .idea/
+.gitignore
