@@ -5,7 +5,8 @@ library(gcookbook)
 
 
 # Load Data
-testnumbers <- read_csv("https://github.com/tomsaunders98/CovidTests/raw/master/Testnumbers.csv")
+#url("https://github.com/tomsaunders98/CovidTests/raw/master/Testnumbers.csv")
+testnumbers <- read_csv("Testnumbers.csv")
 
 # Universal Wrangling
 for(i in 1:nrow(testnumbers)){
@@ -41,7 +42,7 @@ testnumbersBar <- Barpercap %>%
     TestsPerMil = (as.double(max)/as.double(Population))*1000
   ) %>%
   arrange(desc(max)) %>%
-  filter(Country != "ICE")
+  filter(Country != "ICE") # Just puts everything way out of proportion
 
 # Aesthetics
 maxnum = max(testnumbersBar$TestsPerMil, na.rm=TRUE) + 20
