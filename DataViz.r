@@ -2,6 +2,7 @@ library(tidyverse)
 library(ggrepel)
 library(hrbrthemes)
 library(gcookbook)
+library(Cairo)
 
 
 # Load Data
