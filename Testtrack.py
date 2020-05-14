@@ -84,7 +84,6 @@ def TrackChanges(Country):
         tables = tabula.read_pdf(downloadtext)
         df = tables[0]
         testnumber = df.iloc[-1,-1]
-        print(testnumber)
         if len(str(testnumber)) > 10:
             raise Exception(f"{Country} value of {testnumber} probably too large.")
     if Country == "NOR":
@@ -93,10 +92,8 @@ def TrackChanges(Country):
         page = urllib.request.urlopen(req)
         soup = BeautifulSoup(page, 'lxml')
         testnumber = soup.find("div", class_="fhi-key-figure-number").get_text()
-        print(testnumber)
         testdate = soup.find("div", class_="fhi-key-figure-updated").get_text()
         testdate = re.findall('(\d+.*?\d+)', testdate)[0]
-        print(testdate)
     if Country == "DEN":
         page = urllib.request.urlopen(pages["DEN"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -107,7 +104,6 @@ def TrackChanges(Country):
         page = urllib.request.urlopen(pages["AUST"])
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find("div", class_="table-responsive").find("table").findAll("tr")[-1].findAll("td")[-1].get_text()
-        print(text)
         testnumber = text
         testdate = soup.find("time").string
     if Country == "JPN":
@@ -149,7 +145,6 @@ def TrackChanges(Country):
         testnumber = soup.find(id="count-test").string
         text = soup.find(id="last-modified-tests").string
         testdate = search_dates(text)[0][1]
-        print(testdate)
     if Country == "EST":
         page = urllib.request.urlopen(pages["EST"])
         soup = BeautifulSoup(page, 'html.parser')
@@ -176,7 +171,6 @@ def TrackChanges(Country):
         page = urllib.request.urlopen(pages["LIT"])
         soup = BeautifulSoup(page, 'html.parser')
         text = soup.find("div", class_="text").findAll("li")[-2].get_text()
-        print(text)
         testnumber = re.findall('[0-9]+', text)
         testdate = soup.find("div", class_="date").string.split(" ")[3]
     # if Country == "NED": #weekly now
@@ -226,10 +220,8 @@ def TrackChanges(Country):
         html = str(driver.find_elements_by_tag_name("html")[0].get_attribute('innerHTML'))
         soup = BeautifulSoup(html, 'html.parser')
         testnumber = soup.find("h3", class_="govuk-heading-l govuk-!-margin-bottom-3").get_text()
-        print(testnumber)
         testdate = soup.find("p", class_="govuk-body").get_text()
         testdate = search_dates(testdate)[0][1]
-        print(testdate)
 
     if Country == "SLI":
         page = urllib.request.urlopen(pages["SLI"])
@@ -274,7 +266,6 @@ def TrackChanges(Country):
         testdate = search_dates(soup.find("li", class_="time_info").string)[0][1]
         text = soup.find("div", class_="page_content").get_text()
         testnumber = re.findall('(\d+\.\d+ )(?=testiranja)', text)[0]
-        print(testnumber)
     if Country == "FIN":  # needtoget selenium for this (javascript blocker)
         driver = webdriver.Chrome()
         driver.get(pages["FIN"])
@@ -296,9 +287,7 @@ def TrackChanges(Country):
         html = str(driver.find_elements_by_tag_name("html")[0].get_attribute('innerHTML'))
         soup = BeautifulSoup(html, 'html.parser')
         testnumber = soup.find("div", class_="scf-text").find("span", class_="counter").string
-        print(test)
         testdate = search_dates(soup.find("div", class_="elements-title mb-30").find("h2").string)
-        print(testdate)
     if Country == "NZ":
         page = urllib.request.urlopen(pages["NZ"])
         soup = BeautifulSoup(page, 'html.parser')
